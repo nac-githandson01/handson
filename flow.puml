@@ -1,0 +1,30 @@
+@startuml
+
+partition 開発者 {
+  (*) --> "トピックブランチ作成"
+  --> "実装・修正"
+  --> "commit"
+  --> "push to remote"
+  --> "pull request"
+}
+
+partition 開発者 {
+  "pull request" --> "マージ"
+}
+end partition
+partition レビュアー #CCCCEE
+  "pull request" --> if "実装確認・相談" then
+  -->[問題なし] "マージ"
+else
+  -->[問題あり] "実装・修正"
+endif
+end partition
+
+partition 管理者 #FFCCFF {
+  "マージ" -> "master"
+  "master" -> "pull request Close"
+  "pull request Close" -> "トピックブランチ削除"
+  "master" --> "デプロイ"
+  "master" --> (*)
+}
+@enduml
